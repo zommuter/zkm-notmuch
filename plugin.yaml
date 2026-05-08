@@ -1,0 +1,22 @@
+name: notmuch
+version: 0.1.0
+description: >
+  Amender plugin: reads tags from the notmuch xapian database and merges them
+  into mail/messages/ frontmatter via zkm.amendments. First amender in the
+  zkm pipeline — closes the gap where zkm-eml initialises tags: [] empty.
+
+creates_dirs: []
+
+config:
+  NOTMUCH_CONFIG:
+    required: false
+    default: ""
+    description: >
+      Path to the notmuch config file (e.g. ~/.notmuch-config).
+      When empty, notmuch uses its own default config discovery.
+  NOTMUCH_TAGS_EXCLUDE:
+    required: false
+    default: "inbox,unread,attachment,signed,encrypted,replied,passed,flagged,deleted,sent"
+    description: >
+      Comma-separated list of notmuch system tags to exclude from zkm tags.
+      User-defined content tags (e.g. "bill", "receipt") are not in this list.

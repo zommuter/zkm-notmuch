@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "zkm-notmuch"
+version = "0.1.0"
+description = "zkm amender plugin: merge notmuch tags into mail frontmatter"
+requires-python = ">=3.14"
+dependencies = [
+    "python-frontmatter>=1.1",
+    "zkm",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/zkm_notmuch"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.uv.sources]
+zkm = { path = "../..", editable = true }
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
