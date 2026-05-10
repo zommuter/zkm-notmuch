@@ -4,12 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "zkm-notmuch"
-version = "0.1.0"
+version = "0.1.1"
 description = "zkm amender plugin: merge notmuch tags into mail frontmatter"
 requires-python = ">=3.14"
 dependencies = [
     "python-frontmatter>=1.1",
-    "zkm>=0.2.0,<0.3.0",
+    "zkm>=0.3.0,<0.4.0",
 ]
 
 [project.optional-dependencies]
