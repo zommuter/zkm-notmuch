@@ -3,7 +3,7 @@ version: 0.1.0
 description: >
   Amender plugin: reads tags from the notmuch xapian database and merges them
   into mail/messages/ frontmatter via zkm.amendments. First amender in the
-  zkm pipeline — closes the gap where zkm-eml initialises tags: [] empty.
+  zkm pipeline — closes the gap where eml initialises tags: [] empty.
 
 creates_dirs: []
 
