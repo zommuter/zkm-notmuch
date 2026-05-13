@@ -27,7 +27,8 @@ git clone https://github.com/zommuter/zkm-notmuch.git plugins/zkm-notmuch
 
 | Variable | Default | Description |
 |---|---|---|
-| `NOTMUCH_EXCLUDE_TAGS` | *(built-in list)* | Comma-separated tag names to skip |
+| `NOTMUCH_CONFIG` | *(notmuch default)* | Path to a notmuch config file (e.g. `~/.notmuch-config`) |
+| `NOTMUCH_TAGS_EXCLUDE` | *(built-in list)* | Comma-separated system tag names to exclude (e.g. `inbox,unread`) |
 
 ## Run
 
