@@ -4,14 +4,33 @@ build-backend = "hatchling.build"
 
 [project]
 name = "zkm-notmuch"
-version = "0.1.1"
+version = "0.2.0"
 description = "zkm amender plugin: merge notmuch tags into mail frontmatter"
 license = "MIT"
 requires-python = ">=3.14"
+authors = [{name = "Tobias Kienzler", email = "zommuter@googlemail.com"}]
+keywords = ["knowledge-management", "markdown", "personal-data", "notmuch", "email"]
+readme = "README.md"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Office/Business",
+    "Topic :: Text Processing",
+    "Typing :: Typed",
+]
 dependencies = [
     "python-frontmatter>=1.1",
-    "zkm>=0.3.0,<0.4.0",
+    "zkm>=0.4,<1.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/zommuter/zkm"
+Repository = "https://github.com/zommuter/zkm-notmuch"
+Issues = "https://github.com/zommuter/zkm-notmuch/issues"
 
 [project.optional-dependencies]
 dev = [
