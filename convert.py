@@ -31,12 +31,13 @@ def convert(store_path: Path, config: dict, *, progress=None) -> list[Path]:
 
     Returns [] — amender pattern; run `zkm index` after to pick up changes.
     """
-    notmuch_config = config.get("NOTMUCH_CONFIG", "").strip() or None
-    exclude_raw = config.get("NOTMUCH_TAGS_EXCLUDE", "")
-    if exclude_raw.strip():
-        exclude = frozenset(t.strip() for t in exclude_raw.split(",") if t.strip())
+    notmuch_config = str(config.get("config_file", "") or "").strip() or None
+    excl_raw = config.get("tags_exclude", "")
+    if isinstance(excl_raw, list):
+        exclude = frozenset(t for t in excl_raw if t) or _DEFAULT_EXCLUDE
     else:
-        exclude = _DEFAULT_EXCLUDE
+        raw_str = str(excl_raw).strip()
+        exclude = frozenset(t.strip() for t in raw_str.split(",") if t.strip()) if raw_str else _DEFAULT_EXCLUDE
 
     tags_by_mid = _load_notmuch_tags(notmuch_config, exclude)
 

@@ -8,15 +8,25 @@ description: >
 creates_dirs: []
 
 config:
-  NOTMUCH_CONFIG:
+  config_file:
     required: false
     default: ""
     description: >
       Path to the notmuch config file (e.g. ~/.notmuch-config).
       When empty, notmuch uses its own default config discovery.
-  NOTMUCH_TAGS_EXCLUDE:
+  tags_exclude:
     required: false
-    default: "inbox,unread,attachment,signed,encrypted,replied,passed,flagged,deleted,sent"
+    default:
+      - inbox
+      - unread
+      - attachment
+      - signed
+      - encrypted
+      - replied
+      - passed
+      - flagged
+      - deleted
+      - sent
     description: >
-      Comma-separated list of notmuch system tags to exclude from zkm tags.
+      List of notmuch system tags to exclude from zkm tags.
       User-defined content tags (e.g. "bill", "receipt") are not in this list.
