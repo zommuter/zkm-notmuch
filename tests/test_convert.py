@@ -7,10 +7,9 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import frontmatter
-import pytest
 
 from conftest import make_md, make_store
-from convert import PLUGIN_NAME, _normalise_mid, _parse_batch_tag, convert
+from zkm_notmuch.convert import PLUGIN_NAME, _normalise_mid, _parse_batch_tag, convert
 
 # ---------------------------------------------------------------------------
 # _normalise_mid
@@ -90,7 +89,7 @@ def test_convert_basic_round_trip(tmp_path):
     md = make_md(msgs, "msg1.md", message_id="<abc@example.com>")
 
     dump_output = "+inbox +bill +receipt -- id:abc@example.com"
-    with patch("convert.subprocess.run", return_value=_fake_notmuch_output([dump_output])):
+    with patch("zkm_notmuch.convert.subprocess.run", return_value=_fake_notmuch_output([dump_output])):
         result = convert(store, {})
 
     assert result == []
@@ -102,7 +101,7 @@ def test_convert_basic_round_trip(tmp_path):
 
 def test_convert_returns_empty_list(tmp_path):
     store = make_store(tmp_path)
-    with patch("convert.subprocess.run", return_value=_fake_notmuch_output([])):
+    with patch("zkm_notmuch.convert.subprocess.run", return_value=_fake_notmuch_output([])):
         result = convert(store, {})
     assert result == []
 
@@ -113,7 +112,7 @@ def test_convert_union_with_existing_tags(tmp_path):
     md = make_md(msgs, "msg1.md", message_id="<abc@example.com>", tags=["existing"])
 
     dump_output = "+bill -- id:abc@example.com"
-    with patch("convert.subprocess.run", return_value=_fake_notmuch_output([dump_output])):
+    with patch("zkm_notmuch.convert.subprocess.run", return_value=_fake_notmuch_output([dump_output])):
         convert(store, {})
 
     tags = frontmatter.load(md).metadata["tags"]
@@ -127,7 +126,7 @@ def test_convert_idempotent(tmp_path):
     md = make_md(msgs, "msg1.md", message_id="<abc@example.com>")
 
     dump_output = "+bill -- id:abc@example.com"
-    with patch("convert.subprocess.run", return_value=_fake_notmuch_output([dump_output])):
+    with patch("zkm_notmuch.convert.subprocess.run", return_value=_fake_notmuch_output([dump_output])):
         convert(store, {})
         convert(store, {})
 
@@ -139,19 +138,19 @@ def test_convert_unknown_message_id_leaves_queue_entry(tmp_path):
     store = make_store(tmp_path)
 
     dump_output = "+bill -- id:unknown@example.com"
-    with patch("convert.subprocess.run", return_value=_fake_notmuch_output([dump_output])):
+    with patch("zkm_notmuch.convert.subprocess.run", return_value=_fake_notmuch_output([dump_output])):
         convert(store, {})
 
     queue_files = list((store / ".zkm-state" / "amendments" / PLUGIN_NAME).glob("*.json"))
     assert len(queue_files) == 1
 
 
-def test_convert_uses_notmuch_config_flag(tmp_path):
+def test_convert_uses_config_file_flag(tmp_path):
     store = make_store(tmp_path)
     config_path = str(tmp_path / "my.notmuch-config")
 
-    with patch("convert.subprocess.run", return_value=_fake_notmuch_output([])) as mock_run:
-        convert(store, {"NOTMUCH_CONFIG": config_path})
+    with patch("zkm_notmuch.convert.subprocess.run", return_value=_fake_notmuch_output([])) as mock_run:
+        convert(store, {"config_file": config_path})
 
     cmd = mock_run.call_args[0][0]
     assert "--config" in cmd
@@ -161,7 +160,7 @@ def test_convert_uses_notmuch_config_flag(tmp_path):
 def test_convert_no_config_flag_when_not_set(tmp_path):
     store = make_store(tmp_path)
 
-    with patch("convert.subprocess.run", return_value=_fake_notmuch_output([])) as mock_run:
+    with patch("zkm_notmuch.convert.subprocess.run", return_value=_fake_notmuch_output([])) as mock_run:
         convert(store, {})
 
     cmd = mock_run.call_args[0][0]
@@ -174,7 +173,7 @@ def test_convert_sidecar_written_after_apply(tmp_path):
     md = make_md(msgs, "msg1.md", message_id="<abc@example.com>")
 
     dump_output = "+bill -- id:abc@example.com"
-    with patch("convert.subprocess.run", return_value=_fake_notmuch_output([dump_output])):
+    with patch("zkm_notmuch.convert.subprocess.run", return_value=_fake_notmuch_output([dump_output])):
         convert(store, {})
 
     sidecar = Path(str(md) + ".amendments.json")

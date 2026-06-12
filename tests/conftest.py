@@ -1,10 +1,7 @@
 from __future__ import annotations
 
 import subprocess
-import sys
 from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
 def make_store(tmp_path: Path) -> Path:
