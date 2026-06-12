@@ -17,18 +17,30 @@
 
 ## Install
 
-Clone this repo inside your zkm `plugins/` directory:
+End-user (wheel, entry-point discovery):
+
+```bash
+uv tool install zkm --with zkm-notmuch
+```
+
+Development (filesystem discovery) — clone this repo inside your zkm `plugins/` directory:
 
 ```bash
 git clone https://github.com/zommuter/zkm-notmuch.git plugins/zkm-notmuch
 ```
 
-## Configuration (in `<store>/.env`)
+## Configuration (in `<store>/zkm-config.yaml`)
 
-| Variable | Default | Description |
+```yaml
+notmuch:
+  config_file: ~/.notmuch-config   # optional; empty = notmuch default discovery
+  tags_exclude: [inbox, unread]    # optional; overrides the built-in system-tag list
+```
+
+| Key | Default | Description |
 |---|---|---|
-| `NOTMUCH_CONFIG` | *(notmuch default)* | Path to a notmuch config file (e.g. `~/.notmuch-config`) |
-| `NOTMUCH_TAGS_EXCLUDE` | *(built-in list)* | Comma-separated system tag names to exclude (e.g. `inbox,unread`) |
+| `config_file` | *(notmuch default discovery)* | Path passed as `notmuch --config <path>` |
+| `tags_exclude` | *(built-in list)* | System tags to exclude — YAML list or comma-separated string |
 
 ## Run
 
