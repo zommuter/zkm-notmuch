@@ -108,7 +108,7 @@ Non-secret config lives in `<store>/zkm-config.yaml` under the plugin's section
 - Keep `zkm` dep pin (`>=0.4,<1.0`) honest: if you start using a new core API,
   raise the floor.
 
-## Relay contract <!-- fables-executor contract v1 -->
+## Relay contract <!-- fables-executor contract v2 -->
 
 This repo is managed by a reviewer/executor relay. Load the `fables-executor` skill
 (`/fables-executor`) before working on any item, then follow its rules exactly.
