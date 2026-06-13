@@ -22,3 +22,7 @@ Handoff: first CLAUDE.md + ARCHITECTURE.md (D1-D6); README de-staled to zkm-conf
 ## 2026-06-13 10:11 — executor (sonnet, relay-loop)
 
 executor: all four ROUTINE items complete (d0e9 kind:amender, c353 created-scoped amending, 1af4 actionable CLI errors, df4e empty tags_exclude); 29/29 tests green
+
+## 2026-06-13 15:11 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
+
+review: cf5e887 audited clean (docs-only, no gaming surface, 29 tests green); contract pointer v1→v2, ROADMAP/TODO synced, plugin-error-contract routed to inbox (4d69)
