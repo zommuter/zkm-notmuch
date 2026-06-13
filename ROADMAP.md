@@ -12,7 +12,7 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
     `list_amenders()` includes notmuch and `zkm convert eml` auto-runs it
     (user-observable: tags appear without a manual `zkm convert notmuch`).
   - **Tests**: `tests/test_roadmap_specs.py::test_d0e9_root_plugin_yaml_declares_kind_amender`,
-    `::test_d0e9_packaged_plugin_yaml_declares_kind_amender` (currently RED)
+    `::test_d0e9_packaged_plugin_yaml_declares_kind_amender` (GREEN)
   - **Done-check**: `uv run pytest -k "d0e9 or consistency"`
   - **Context**: see ARCHITECTURE.md §D6. Core defaults `kind` to `"converter"`
     when absent (`zkm/convert.py` Plugin dataclass) — that default is why the
@@ -29,7 +29,7 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
     passes `created` automatically after eml converts.
   - **Tests**: `tests/test_roadmap_specs.py::test_c353_convert_declares_created_param`,
     `::test_c353_created_scopes_emits_to_batch`,
-    `::test_c353_created_none_full_sweep` (currently RED)
+    `::test_c353_created_none_full_sweep` (GREEN)
   - **Done-check**: `uv run pytest -k c353`
   - **Context**: ARCHITECTURE.md §D6; core probe in `zkm/convert.py`
     (`_supports_created`, `run_convert`). The notmuch dump itself stays global
@@ -43,7 +43,7 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
     case, includes the captured stderr. No raw subprocess tracebacks reach the
     user; core's amender loop then prints its one-line WARN instead of a stack.
   - **Tests**: `tests/test_roadmap_specs.py::test_1af4_missing_notmuch_binary_raises_runtime_error`,
-    `::test_1af4_notmuch_failure_includes_stderr` (currently RED)
+    `::test_1af4_notmuch_failure_includes_stderr` (GREEN)
   - **Done-check**: `uv run pytest -k 1af4`
   - **Context**: `src/zkm_notmuch/convert.py::_load_notmuch_tags` (the
     `subprocess.run(..., check=True)` call). Judgment call logged in
@@ -55,8 +55,8 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
     built-in default list still applies when the key is absent or an empty
     string. Comma-string parsing unchanged.
   - **Tests**: `tests/test_roadmap_specs.py::test_df4e_explicit_empty_list_disables_exclusions`,
-    `::test_df4e_absent_key_keeps_default_exclusions` (currently RED on the
-    first; the second is the behaviour-preserving guard)
+    `::test_df4e_absent_key_keeps_default_exclusions` (GREEN; the second is the
+    behaviour-preserving guard)
   - **Done-check**: `uv run pytest -k df4e`
   - **Context**: `src/zkm_notmuch/convert.py::convert` exclusion resolution
     (`frozenset(...) or _DEFAULT_EXCLUDE` is the falsy-empty trap). See
