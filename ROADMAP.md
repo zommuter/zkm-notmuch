@@ -6,7 +6,7 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
 
 ## Items
 
-- [ ] Declare `kind: amender` in both plugin.yaml manifests [ROUTINE] <!-- id:d0e9 -->
+- [x] Declare `kind: amender` in both plugin.yaml manifests [ROUTINE] <!-- id:d0e9 -->
   - **Acceptance**: `plugin.yaml` AND `src/zkm_notmuch/plugin.yaml` carry
     `kind: amender`; the two files stay byte-identical. After this, core's
     `list_amenders()` includes notmuch and `zkm convert eml` auto-runs it
@@ -19,7 +19,7 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
     plugin is currently never auto-run. Edit BOTH yaml copies (CLAUDE.md gotcha);
     `tests/test_consistency.py` enforces identity.
 
-- [ ] Support `created`-scoped amending (core amender scoping, id:63bb) [ROUTINE] <!-- id:c353 -->
+- [x] Support `created`-scoped amending (core amender scoping, id:63bb) [ROUTINE] <!-- id:c353 -->
   - **Acceptance**: `convert()` gains a keyword param `created: list[Path] | None = None`.
     When `created` is a list, only message_ids whose md file is in `created`
     (matched via each created file's `message_id` frontmatter; non-md / missing /
@@ -36,7 +36,7 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
     (one subprocess, §D2) — scoping filters the *emit* loop. Keep the existing
     `progress` param working.
 
-- [ ] Fail with actionable errors when the notmuch CLI is unavailable or fails [ROUTINE] <!-- id:1af4 -->
+- [x] Fail with actionable errors when the notmuch CLI is unavailable or fails [ROUTINE] <!-- id:1af4 -->
   - **Acceptance**: a missing `notmuch` binary (FileNotFoundError from
     subprocess) and a non-zero notmuch exit (CalledProcessError) both raise
     `RuntimeError` with a message that names `notmuch` and, for the non-zero
@@ -49,7 +49,7 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
     `subprocess.run(..., check=True)` call). Judgment call logged in
     REVIEW_ME.md (exception type choice).
 
-- [ ] Treat explicit `tags_exclude: []` as "exclude nothing" [ROUTINE] <!-- id:df4e -->
+- [x] Treat explicit `tags_exclude: []` as "exclude nothing" [ROUTINE] <!-- id:df4e -->
   - **Acceptance**: a user who sets `tags_exclude: []` (explicit empty YAML
     list) gets ALL notmuch tags, including system tags like `inbox`. The
     built-in default list still applies when the key is absent or an empty

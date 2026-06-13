@@ -1,5 +1,6 @@
 name: notmuch
 version: 0.3.0
+kind: amender
 description: >
   Amender plugin: reads tags from the notmuch xapian database and merges them
   into mail/messages/ frontmatter via zkm.amendments. First amender in the

@@ -15,10 +15,14 @@ import subprocess
 import sys
 from pathlib import Path
 
+import frontmatter as _frontmatter
+
 from zkm.amendments import apply_queue, emit
 
 PLUGIN_NAME = "notmuch"
 PLUGIN_VERSION = "0.3.0"
+
+_SENTINEL = object()  # distinguish "key absent" from "key present but falsy"
 
 _DEFAULT_EXCLUDE = frozenset({
     "inbox", "unread", "attachment", "signed", "encrypted",
@@ -26,23 +30,58 @@ _DEFAULT_EXCLUDE = frozenset({
 })
 
 
-def convert(store_path: Path, config: dict, *, progress=None) -> list[Path]:
+def convert(
+    store_path: Path,
+    config: dict,
+    *,
+    progress=None,
+    created: list[Path] | None = None,
+) -> list[Path]:
     """Amend mail/messages/ md files with notmuch tags.
 
-    Returns [] — amender pattern; run `zkm index` after to pick up changes.
+    If *created* is a list of Paths, only messages whose md file is in that
+    list (matched via the file's ``message_id`` frontmatter field) receive
+    amendment records.  ``created=None`` (default) runs the full sweep.
+
+    Returns [] — amender pattern; run ``zkm index`` after to pick up changes.
     """
     notmuch_config = str(config.get("config_file", "") or "").strip() or None
-    excl_raw = config.get("tags_exclude", "")
-    if isinstance(excl_raw, list):
-        exclude = frozenset(t for t in excl_raw if t) or _DEFAULT_EXCLUDE
+
+    excl_raw = config.get("tags_exclude", _SENTINEL)
+    if excl_raw is _SENTINEL:
+        # Key absent — use built-in defaults.
+        exclude = _DEFAULT_EXCLUDE
+    elif isinstance(excl_raw, list):
+        # Explicit list: empty list means "exclude nothing"; non-empty filters.
+        exclude = frozenset(t for t in excl_raw if t)
     else:
         raw_str = str(excl_raw).strip()
-        exclude = frozenset(t.strip() for t in raw_str.split(",") if t.strip()) if raw_str else _DEFAULT_EXCLUDE
+        exclude = (
+            frozenset(t.strip() for t in raw_str.split(",") if t.strip())
+            if raw_str
+            else _DEFAULT_EXCLUDE
+        )
 
     tags_by_mid = _load_notmuch_tags(notmuch_config, exclude)
 
+    # Build a set of message_ids in the created batch (if scoped).
+    created_mids: frozenset[str] | None = None
+    if created is not None:
+        batch_mids: set[str] = set()
+        for md_path in created:
+            try:
+                post = _frontmatter.load(str(md_path))
+                mid = post.metadata.get("message_id")
+                if mid:
+                    batch_mids.add(str(mid))
+            except Exception:
+                pass  # non-md or unreadable — skip per spec
+        created_mids = frozenset(batch_mids)
+
     total = len(tags_by_mid)
     for i, (message_id, tags) in enumerate(tags_by_mid.items(), 1):
+        if created_mids is not None and message_id not in created_mids:
+            continue  # out-of-batch — skip emit
         emit(
             store_path,
             key={"message_id": message_id},
@@ -78,13 +117,28 @@ def _load_notmuch_tags(
 
     message_id values are normalised to include angle brackets to match
     the raw_message_id format stored by zkm-eml.
+
+    Raises RuntimeError (with an actionable message) on a missing notmuch
+    binary or a non-zero notmuch exit — callers never see raw subprocess
+    tracebacks.
     """
     cmd = ["notmuch"]
     if notmuch_config:
         cmd += ["--config", notmuch_config]
     cmd += ["dump", "--format=batch-tag"]
 
-    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    except FileNotFoundError as exc:
+        raise RuntimeError(
+            "notmuch binary not found — install notmuch and ensure it is on PATH"
+        ) from exc
+    except subprocess.CalledProcessError as exc:
+        stderr_msg = (exc.stderr or "").strip()
+        raise RuntimeError(
+            f"notmuch exited with status {exc.returncode}: {stderr_msg}"
+        ) from exc
+
     return _parse_batch_tag(result.stdout, exclude)
 
 
