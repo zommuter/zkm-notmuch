@@ -7,6 +7,11 @@ Max ~10 open boxes; the reviewer prunes resolved ones each review turn.
   exception type for CLI failures is ambiguous; the tests encode `RuntimeError`
   (not SystemExit / click.ClickException) so core's amender loop catches it and
   prints its one-line WARN instead of a traceback.
+  → owner 2026-06-13 CONFIRMED & RATIFIED as canonical: a plugin signals a
+  runtime/CLI failure by raising `RuntimeError`; core's amender loop catches it
+  and prints a one-line WARN. This is now the store-wide plugin error contract
+  (see zkm-social 143c, zkm-claude-ai fa28). Worth recording in core
+  ARCHITECTURE.md §plugin-contract.
 
 - [ ] tests/test_roadmap_specs.py::test_df4e_explicit_empty_list_disables_exclusions (roadmap:df4e) —
   interpretation: explicit `tags_exclude: []` means "exclude nothing", while an
