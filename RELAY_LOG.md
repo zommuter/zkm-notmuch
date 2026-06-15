@@ -47,3 +47,7 @@ Spec-drift §4: migrated the stale relay pointer in CLAUDE.md from
 (`/relay executor`). No new ledger items in window (5b no-op). Roadmap unchanged:
 d0e9/c353/1af4/df4e closed & verified, f103 [HARD] the only open item.
 routine_open=0. REVIEW_ME now 0 open boxes.
+
+## 2026-06-15 11:27 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
+
+review 20260615-1104: df4e user-confirm verified clean (29/29 green), stale relay pointer migrated v2→v3; f103 [HARD] the only open item
