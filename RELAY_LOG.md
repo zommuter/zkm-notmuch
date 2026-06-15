@@ -30,3 +30,20 @@ review: cf5e887 audited clean (docs-only, no gaming surface, 29 tests green); co
 ## 2026-06-13 23:53 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
 
 review 20260613-2304: 1 commit audited clean (REVIEW_ME triage only, no code/tests touched), 29 tests green, 4/4 ROUTINE verified, 1 HARD (f103) open, contract pointer v2 in sync
+
+## 2026-06-15 11:04 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
+
+Review window fable-ckpt-20260613-2353..HEAD: one user manual commit (87c71be)
+ticking the df4e REVIEW_ME box (interpretation confirmed: explicit `tags_exclude: []`
+== exclude-nothing). Trust-but-verify clean: no test files deleted/weakened/skipped,
+no implementation changed in the window, so no resurrection/fixture-special-casing
+exposure. Full suite 29/29 green (run in the main checkout — the worktree's `../../`
+editable-zkm path can't resolve two levels deep under ~/.cache/, known friction, not a
+defect; HEAD identical to main checkout so the tree under review is exact). df4e pair
+(incl. the absent-key behaviour guard) both pass. BDD `convert-notmuch.feature` is
+fully @manual (live notmuch DB) — surfaced as the human checklist, not automated.
+Spec-drift §4: migrated the stale relay pointer in CLAUDE.md from
+`<!-- fables-executor contract v2 -->` (`/fables-executor` body) to v3
+(`/relay executor`). No new ledger items in window (5b no-op). Roadmap unchanged:
+d0e9/c353/1af4/df4e closed & verified, f103 [HARD] the only open item.
+routine_open=0. REVIEW_ME now 0 open boxes.
