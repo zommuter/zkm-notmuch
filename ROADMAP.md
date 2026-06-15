@@ -71,6 +71,14 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
   - **Acceptance** (sketch): deleting a tag in notmuch and re-running the
     amender removes it from frontmatter iff notmuch was its (sole) producer;
     idempotent; attribution sidecar records the retraction.
+  - **Design-gate** (sized + deferred 2026-06-15, RELAY_LOG): NOT single-turn-HARD-
+    ready as written. Blocked on a core-repo decision — `zkm/amendments.py::merge_fields`
+    (~L134) merges `tags` as set-UNION only, no retraction semantic; removal needs a NEW
+    core field-merge mode (retract) plus attribution-aware reconciliation, a cross-repo
+    change with data-loss risk. Run a `/meeting` on the core removal semantic, then split:
+    (a) add a retract merge mode to `zkm.amendments` in the CORE repo (own red-green);
+    (b) plugin-side diff (prior notmuch-attributed tags − current) emitting retractions.
+    Do NOT dispatch as a single executor/hard turn until (a) lands.
 
 ## Repo chores (no id; fold into any session)
 

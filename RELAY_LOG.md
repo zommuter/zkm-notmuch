@@ -1,5 +1,23 @@
 # Relay log <!-- merge=union; append-only — never edit or reorder past entries -->
 
+## 2026-06-15 16:13 — review (claude-opus-4-8, fable-standin, relay-loop)
+
+review 20260615-1613: audited the 1 commit since relay-ckpt-20260615-1127 (the id:f103
+sizing-handback). Window touched ONLY RELAY_LOG.md — no code, no test files changed,
+deleted, or weakened (test-integrity audit clean by construction: 0 test diffs). Verified
+the handback's claims independently: baseline suite 29/29 green in the main checkout;
+worktree HEAD == main checkout HEAD (64665f1); the core blocker is real —
+`zkm/amendments.py::merge_fields` (~L134) merges `tags` set-UNION only with no retraction
+semantic. id:f103 correctly stays OPEN as [HARD]; no checkbox was gamed. Re-derivation:
+nothing closed (nothing went green), nothing promoted/demoted. Added a Design-gate note to
+the f103 ROADMAP item recording the /meeting-on-core-removal-semantic prerequisite + the
+(a)core-retract-mode / (b)plugin-diff split, so a future strong session doesn't re-derive
+it cold (re-scope, no new id). Spec-drift §4: refreshed the CLAUDE.md Relay-contract
+pointer marker v3 → v4 (body already current). README/ARCHITECTURE unchanged this window —
+no user-facing drift. BDD: features/convert-notmuch.feature is all @manual (no behave
+runner) and unchanged — pre-existing human checklist, nothing new to surface. REVIEW_ME 0
+open. routine_open=0 (the only open ROADMAP item is [HARD], design-gated).
+
 ## 2026-06-15 11:52 — hard-execute (claude-opus-4-8, fable-standin, relay-loop)
 
 hard 20260615-1152: SIZED the only open [HARD] item id:f103 (propagate notmuch tag
