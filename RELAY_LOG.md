@@ -1,5 +1,33 @@
 # Relay log <!-- merge=union; append-only — never edit or reorder past entries -->
 
+## 2026-06-15 11:52 — hard-execute (claude-opus-4-8, fable-standin, relay-loop)
+
+hard 20260615-1152: SIZED the only open [HARD] item id:f103 (propagate notmuch tag
+REMOVALS to frontmatter) and DEFERRED it — too large for one bounded turn, no code
+written, f103 stays open. HANDBACK below.
+
+HANDBACK (id:f103, sizing): The item cannot finish cleanly+green in a single
+single-repo turn for four interlocking reasons. (1) Cross-repo: the core dependency
+is in a DIFFERENT repo (`~/src/zkm/src/zkm/amendments.py`), outside this child's
+single-repo worktree; conventions.md mandates one subagent per repo. (2) Missing core
+primitive: `zkm/amendments.py::merge_fields` implements tags as set-UNION ONLY
+(`sorted(set(existing) | set(value))`, ~line 132) — `emit()` records additive fields,
+there is NO retraction semantic. Removal requires a NEW core-level field-merge mode
+(retract), a design decision with its own acceptance/tests/idempotence. (3)
+Attribution-aware reconciliation: retract a tag ONLY if the `<md>.amendments.json`
+sidecar attributes it to `emitted_by: notmuch`, never user-/eml-authored tags —
+needs prior-attribution diffing. (4) Data-loss risk: wrongly retracting a
+user-authored tag is destructive; a half-correct removal path is worse than leaving
+it open (ROADMAP "Why HARD" note flags exactly this). The ROADMAP acceptance is an
+explicit SKETCH, not a closed spec — it needs a design pass (likely a /meeting on the
+core removal semantic) before it is even single-turn-HARD-ready. Recommended split for
+a future strong session: (a) add a retract field-merge mode to `zkm.amendments` in the
+CORE repo with its own red-green; (b) plugin-side diff (prior notmuch-attributed tags
+minus current notmuch tags) emitting retraction records. No checkbox ticked, no test
+manufactured. Baseline suite 29/29 green in the main checkout (the worktree's `../../`
+editable-zkm source can't resolve under ~/.cache/ — known friction, not a defect; HEAD
+is identical to the main checkout). routine_open=0; REVIEW_ME unchanged (0 open).
+
 ## 2026-06-13 — executor (claude-sonnet-4-6)
 
 Worked id:d0e9, id:c353, id:1af4, id:df4e — all four ROUTINE items in one session.
