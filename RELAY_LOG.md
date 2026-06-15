@@ -97,3 +97,7 @@ routine_open=0. REVIEW_ME now 0 open boxes.
 ## 2026-06-15 11:27 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
 
 review 20260615-1104: df4e user-confirm verified clean (29/29 green), stale relay pointer migrated v2→v3; f103 [HARD] the only open item
+
+## 2026-06-15 16:24 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
+
+review: id:f103 sizing-handback verified clean — no gaming, f103 stays open [HARD] design-gated; baseline 29/29 green; CLAUDE.md pointer v3→v4
