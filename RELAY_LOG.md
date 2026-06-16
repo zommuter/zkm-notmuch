@@ -101,3 +101,7 @@ review 20260615-1104: df4e user-confirm verified clean (29/29 green), stale rela
 ## 2026-06-15 16:24 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
 
 review: id:f103 sizing-handback verified clean — no gaming, f103 stays open [HARD] design-gated; baseline 29/29 green; CLAUDE.md pointer v3→v4
+
+## 2026-06-16 20:02 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
+
+handoff no-op: C1-C4 already current, only open item id:f103 [HARD] is design-gated (cross-repo core removal semantic); clean worktree, no commit
