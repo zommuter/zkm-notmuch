@@ -62,7 +62,7 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
     (`frozenset(...) or _DEFAULT_EXCLUDE` is the falsy-empty trap). See
     ARCHITECTURE.md §D4; judgment call logged in REVIEW_ME.md.
 
-- [ ] Propagate notmuch tag REMOVALS to frontmatter [HARD — strong model] <!-- id:f103 -->
+- [ ] Propagate notmuch tag REMOVALS to frontmatter [HARD — meeting] <!-- id:f103 -->
   - **Why HARD**: the amendment engine only set-unions `tags`; removal needs an
     attribution-aware reconciliation (retract only tags previously contributed
     with `emitted_by: notmuch`, per the `<md>.amendments.json` sidecar, never
