@@ -105,3 +105,7 @@ review: id:f103 sizing-handback verified clean — no gaming, f103 stays open [H
 ## 2026-06-16 20:02 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
 
 handoff no-op: C1-C4 already current, only open item id:f103 [HARD] is design-gated (cross-repo core removal semantic); clean worktree, no commit
+
+## 2026-06-22 21:26 — maintenance (manual, uv.lock cascade)
+
+uv.lock cascade refresh to zkm 0.16.0 — mechanical version-pin only (id:bae5), audit-exempt class (no code/spec change).
