@@ -109,3 +109,26 @@ handoff no-op: C1-C4 already current, only open item id:f103 [HARD] is design-ga
 ## 2026-06-22 21:26 — maintenance (manual, uv.lock cascade)
 
 uv.lock cascade refresh to zkm 0.16.0 — mechanical version-pin only (id:bae5), audit-exempt class (no code/spec change).
+
+## 2026-06-23 17:24 — reviewer (claude-opus-4-8, relay-loop)
+
+review 20260623-172446: audited the single ROADMAP-only commit 372935a (manual
+reclassify f103 [HARD — meeting]→[ROUTINE], per zkm meeting D2
+2026-06-23-1807-zkm-amendments-removal-coherence). Verified the reclassification is
+legitimate: the prior HARD blocker (a core removal semantic) HAS shipped — core
+`zkm.amendments.emit_set` (mode "set") with attribution-aware retraction and `tags`
+in `_SET_FIELDS` (amendments.py:77). gaming-scan clean (no code/test deletions);
+roadmap-lint clean (f103 carries valid [ROUTINE] + id). Baseline 29/29 green (run
+against the main checkout — the worktree's editable `zkm = {path=../..}` can't
+resolve two levels deep under ~/.cache/, known friction, HEAD identical to main so
+the tree is exact). Re-derived f103 cleanly: removed the now-contradictory
+**Why HARD**/**Design-gate** "do NOT dispatch" prose that conflicted with the
+[ROUTINE] tag, and wrote a red spec
+(`test_f103_removed_notmuch_tag_is_retracted` — RED today, GREEN once convert.py:85
+switches emit→emit_set) plus a green attribution guard
+(`test_f103_user_authored_tag_is_not_retracted` — user/eml tags never retracted),
+both verified against the main-checkout venv (1 failed RED + 1 passed). Mini-handoff
+done for the reverse-handoff window (5b): the manually-added [ROUTINE] line was
+under-specified — back-filled acceptance/done-check/red-spec, reusing id:f103. Ticked
+the stale "f103 [HARD]" TODO.md summary twin (id:7bdd) to [ROUTINE]. CLAUDE.md relay
+pointer already v4 (no drift). routine_open=1 (f103 now executor-ready).
