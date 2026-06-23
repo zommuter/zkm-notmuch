@@ -132,3 +132,7 @@ done for the reverse-handoff window (5b): the manually-added [ROUTINE] line was
 under-specified — back-filled acceptance/done-check/red-spec, reusing id:f103. Ticked
 the stale "f103 [HARD]" TODO.md summary twin (id:7bdd) to [ROUTINE]. CLAUDE.md relay
 pointer already v4 (no drift). routine_open=1 (f103 now executor-ready).
+
+## 2026-06-23 19:43 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
+
+review(f103): verified [HARD→ROUTINE] reclass legit (core emit_set shipped); cleaned contradictory gate prose, wrote red spec + green attribution guard, ticked TODO twin; 29/29 baseline green
