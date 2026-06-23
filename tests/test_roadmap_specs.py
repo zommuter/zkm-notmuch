@@ -152,3 +152,59 @@ def test_df4e_absent_key_keeps_default_exclusions(tmp_path):  # roadmap:df4e
     tags = frontmatter.load(md).metadata["tags"]
     assert "inbox" not in tags
     assert "bill" in tags
+
+
+# ---------------------------------------------------------------------------
+# f103 — propagate notmuch tag REMOVALS to frontmatter (emit -> emit_set migration)
+# ---------------------------------------------------------------------------
+
+
+def test_f103_removed_notmuch_tag_is_retracted(tmp_path):  # roadmap:f103
+    # First sweep: notmuch asserts {bill, urgent} for the message; both land in
+    # frontmatter. Second sweep: notmuch now asserts only {bill} (the user removed
+    # `urgent` in notmuch). Because notmuch was `urgent`'s sole producer, the
+    # declarative (set) amendment must RETRACT it from frontmatter.
+    #
+    # RED with the legacy additive `emit` (set-union never shrinks); GREEN once
+    # convert.py:85 uses `emit_set` (declarative full-set assert + attribution-aware
+    # retraction shipped in zkm.amendments). See ROADMAP id:f103 / zkm meeting
+    # 2026-06-23-1807 D2.
+    store = make_store(tmp_path)
+    msgs = store / "mail" / "messages"
+    md = make_md(msgs, "msg1.md", message_id="<x@y.com>")
+
+    with patch(
+        "zkm_notmuch.convert.subprocess.run",
+        return_value=_fake_dump(["+bill +urgent -- id:x@y.com"]),
+    ):
+        convert(store, {"tags_exclude": []})
+    assert "urgent" in frontmatter.load(md).metadata["tags"]
+
+    with patch(
+        "zkm_notmuch.convert.subprocess.run",
+        return_value=_fake_dump(["+bill -- id:x@y.com"]),
+    ):
+        convert(store, {"tags_exclude": []})
+
+    tags = frontmatter.load(md).metadata["tags"]
+    assert "urgent" not in tags, "notmuch-removed tag must be retracted from frontmatter"
+    assert "bill" in tags, "still-present notmuch tag must remain"
+
+
+def test_f103_user_authored_tag_is_not_retracted(tmp_path):  # roadmap:f103
+    # Attribution guard: a tag the USER (or eml) authored — never emitted by the
+    # notmuch producer — must survive even when notmuch asserts a set that omits it.
+    # emit_set retracts only the producer's OWN prior claims (emitted_by-scoped).
+    store = make_store(tmp_path)
+    msgs = store / "mail" / "messages"
+    md = make_md(msgs, "msg1.md", message_id="<x@y.com>", tags=["keepme"])
+
+    with patch(
+        "zkm_notmuch.convert.subprocess.run",
+        return_value=_fake_dump(["+bill -- id:x@y.com"]),
+    ):
+        convert(store, {"tags_exclude": []})
+
+    tags = frontmatter.load(md).metadata["tags"]
+    assert "keepme" in tags, "user-authored tag must never be retracted by notmuch"
+    assert "bill" in tags

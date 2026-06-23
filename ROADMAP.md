@@ -62,23 +62,28 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
     (`frozenset(...) or _DEFAULT_EXCLUDE` is the falsy-empty trap). See
     ARCHITECTURE.md §D4; judgment call logged in REVIEW_ME.md.
 
-- [ ] Propagate notmuch tag REMOVALS to frontmatter [ROUTINE] — DECIDED 2026-06-23 (docs/meeting-notes via zkm/2026-06-23-1807-zkm-amendments-removal-coherence.md): core retract semantic shipped (zkm.amendments.emit_set); migrate convert.py:85 emit→emit_set asserting current tag set <!-- id:f103 -->
-  - **Why HARD**: the amendment engine only set-unions `tags`; removal needs an
-    attribution-aware reconciliation (retract only tags previously contributed
-    with `emitted_by: notmuch`, per the `<md>.amendments.json` sidecar, never
-    user- or eml-authored tags) and most likely a new core-level removal
-    semantic in `zkm.amendments` — cross-repo design with data-loss risk.
-  - **Acceptance** (sketch): deleting a tag in notmuch and re-running the
-    amender removes it from frontmatter iff notmuch was its (sole) producer;
-    idempotent; attribution sidecar records the retraction.
-  - **Design-gate** (sized + deferred 2026-06-15, RELAY_LOG): NOT single-turn-HARD-
-    ready as written. Blocked on a core-repo decision — `zkm/amendments.py::merge_fields`
-    (~L134) merges `tags` as set-UNION only, no retraction semantic; removal needs a NEW
-    core field-merge mode (retract) plus attribution-aware reconciliation, a cross-repo
-    change with data-loss risk. Run a `/meeting` on the core removal semantic, then split:
-    (a) add a retract merge mode to `zkm.amendments` in the CORE repo (own red-green);
-    (b) plugin-side diff (prior notmuch-attributed tags − current) emitting retractions.
-    Do NOT dispatch as a single executor/hard turn until (a) lands.
+- [ ] Propagate notmuch tag REMOVALS to frontmatter [ROUTINE] <!-- id:f103 -->
+  - **Acceptance**: deleting a tag in notmuch and re-running the amender removes
+    it from frontmatter IFF notmuch was its (sole) producer; idempotent; a
+    user/eml-authored tag the notmuch producer never emitted is NEVER retracted.
+  - **Tests**: `tests/test_roadmap_specs.py::test_f103_removed_notmuch_tag_is_retracted`
+    (RED — legacy additive `emit` set-unions, never shrinks),
+    `::test_f103_user_authored_tag_is_not_retracted` (GREEN — attribution guard).
+  - **Done-check**: `uv run pytest -k f103`
+  - **Context** (reclassified `[HARD — meeting]` → `[ROUTINE]` 2026-06-23, decision
+    D2 in zkm `docs/meeting-notes/2026-06-23-1807-zkm-amendments-removal-coherence.md`):
+    the prior HARD blocker — "needs a new core-level removal semantic in
+    `zkm.amendments`" — has **shipped**. Core now exposes `emit_set` (mode `"set"`,
+    `zkm/src/zkm/amendments.py:77`): a DECLARATIVE full-set assert that, on apply,
+    diffs the producer's stored set against the new set and drops values
+    ref-counting to zero — retracting only `emitted_by: notmuch`'s OWN prior tags,
+    never user/eml tags (`tags` is already in core `_SET_FIELDS`). The remaining
+    work is a one-line-shaped plugin migration: switch the loop in
+    `src/zkm_notmuch/convert.py:85` from `emit(...)` to `emit_set(...)` (identical
+    signature) so each sweep asserts notmuch's CURRENT complete tag set per message.
+    Keep `created`-scoping (`emit_set`'s diff is scoped to keys reported in the run,
+    D4b) and the existing `apply_queue` flow. Update the `from zkm.amendments import`
+    line to pull in `emit_set`.
 
 ## Repo chores (no id; fold into any session)
 
