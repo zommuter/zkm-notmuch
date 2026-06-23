@@ -62,7 +62,7 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
     (`frozenset(...) or _DEFAULT_EXCLUDE` is the falsy-empty trap). See
     ARCHITECTURE.md §D4; judgment call logged in REVIEW_ME.md.
 
-- [ ] Propagate notmuch tag REMOVALS to frontmatter [HARD — meeting] <!-- id:f103 -->
+- [ ] Propagate notmuch tag REMOVALS to frontmatter [ROUTINE] — DECIDED 2026-06-23 (docs/meeting-notes via zkm/2026-06-23-1807-zkm-amendments-removal-coherence.md): core retract semantic shipped (zkm.amendments.emit_set); migrate convert.py:85 emit→emit_set asserting current tag set <!-- id:f103 -->
   - **Why HARD**: the amendment engine only set-unions `tags`; removal needs an
     attribution-aware reconciliation (retract only tags previously contributed
     with `emitted_by: notmuch`, per the `<md>.amendments.json` sidecar, never
