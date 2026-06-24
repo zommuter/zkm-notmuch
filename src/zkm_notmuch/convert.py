@@ -17,10 +17,10 @@ from pathlib import Path
 
 import frontmatter as _frontmatter
 
-from zkm.amendments import apply_queue, emit
+from zkm.amendments import apply_queue, emit_set
 
 PLUGIN_NAME = "notmuch"
-PLUGIN_VERSION = "0.3.0"
+PLUGIN_VERSION = "0.4.0"
 
 _SENTINEL = object()  # distinguish "key absent" from "key present but falsy"
 
@@ -82,7 +82,7 @@ def convert(
     for i, (message_id, tags) in enumerate(tags_by_mid.items(), 1):
         if created_mids is not None and message_id not in created_mids:
             continue  # out-of-batch — skip emit
-        emit(
+        emit_set(
             store_path,
             key={"message_id": message_id},
             fields={"tags": sorted(tags)},

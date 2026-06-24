@@ -62,7 +62,7 @@ checkboxes; only the reviewer adds, removes, or re-scopes items.
     (`frozenset(...) or _DEFAULT_EXCLUDE` is the falsy-empty trap). See
     ARCHITECTURE.md §D4; judgment call logged in REVIEW_ME.md.
 
-- [ ] Propagate notmuch tag REMOVALS to frontmatter [ROUTINE] <!-- id:f103 -->
+- [x] Propagate notmuch tag REMOVALS to frontmatter [ROUTINE] <!-- id:f103 --> (done 2026-06-24, reconcile-integrate of parked orphan d6e2f3d: emit→emit_set; red spec test_f103_removed_notmuch_tag_is_retracted now green, 31/31)
   - **Acceptance**: deleting a tag in notmuch and re-running the amender removes
     it from frontmatter IFF notmuch was its (sole) producer; idempotent; a
     user/eml-authored tag the notmuch producer never emitted is NEVER retracted.
