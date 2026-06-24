@@ -136,3 +136,7 @@ pointer already v4 (no drift). routine_open=1 (f103 now executor-ready).
 ## 2026-06-23 19:43 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
 
 review(f103): verified [HARD→ROUTINE] reclass legit (core emit_set shipped); cleaned contradictory gate prose, wrote red spec + green attribution guard, ticked TODO twin; 29/29 baseline green
+
+## 2026-06-24 13:29 — reviewer (claude-opus-4-8, reconcile)
+
+reconcile-integrate f103 impl (emit→emit_set) from parked orphan d6e2f3d; red spec now green 31/31; v0.4.0
