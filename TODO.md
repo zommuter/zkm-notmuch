@@ -2,4 +2,4 @@
 
 Tactical/cross-cutting work tracked in the central ledger (`~/src/zkm/TODO.md`); relay-managed work in `ROADMAP.md`. <!-- lint-ok: file-purpose preamble -->
 
-- [ ] Relay: 1 open ROADMAP item (f103 [ROUTINE] — reclassified 2026-06-23, emit→emit_set migration); 4 closed & verified green 2026-06-13 <!-- id:7bdd -->
+- [x] Relay: 0 open ROADMAP items — all 5 closed & verified green (4 on 2026-06-13; f103 emit→emit_set migration done 2026-06-24, 31/31) <!-- id:7bdd -->
