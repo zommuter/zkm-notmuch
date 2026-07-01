@@ -70,14 +70,14 @@ the same commit and tag `vX.Y.Z` (bump-and-tag rule).
   `zkm convert notmuch` passes `created=None` → full sweep.
 - Amenders return `[]` from `convert()` — they modify frontmatter in place; run
   `zkm index` afterwards to pick up changes.
-- Frontmatter is multi-producer via `zkm.amendments` (`emit` → queue →
-  `apply_queue`); the md *body* is single-producer (zkm-eml's). Never write the
-  body from this plugin.
+- Frontmatter is multi-producer via `zkm.amendments` (`emit_set` → queue →
+  `apply_queue`; declarative full-set assert with attribution-aware retraction
+  since f103, 2026-06-24); the md *body* is single-producer (zkm-eml's). Never
+  write the body from this plugin.
 
-**Current state (see ROADMAP.md):** `plugin.yaml` does NOT yet declare
-`kind: amender` (so core treats it as a converter and never auto-runs it —
-roadmap d0e9), and `convert()` does NOT yet declare `created` (so even when
-auto-run it would full-sweep — roadmap c353).
+**Current state (see ROADMAP.md):** all 5 roadmap items shipped — `plugin.yaml`
+declares `kind: amender` (d0e9, auto-run after eml converts) and `convert()`
+declares `created` (c353, batch-scoped emits).
 
 ## Config
 

@@ -1,11 +1,12 @@
 # zkm-notmuch
 
-[zkm](https://github.com/zommuter/zkm) amender plugin that merges [notmuch](https://notmuchmail.org/) Xapian tags into the frontmatter of mail messages already converted by `zkm-eml`.
+[zkm](https://github.com/zommuter/zkm) amender plugin that syncs [notmuch](https://notmuchmail.org/) Xapian tags into the frontmatter of mail messages already converted by `zkm-eml`.
 
 ## What it does
 
 - Reads tags via `notmuch dump --format=batch-tag`
-- For each message whose `Message-ID` matches an existing `mail/messages/*.md` file, emits amendment records that extend the `tags:` list in frontmatter
+- For each message whose `Message-ID` matches an existing `mail/messages/*.md` file, asserts notmuch's current tag set in frontmatter (`emit_set`): new tags are added, and tags deleted in notmuch are retracted — but only tags that notmuch itself contributed; user- or eml-authored tags are never removed
+- Runs automatically after `zkm convert eml` (`kind: amender`), scoped to the just-converted batch; `zkm convert notmuch` does a full sweep
 - Amender pattern: returns `[]`, modifies frontmatter in place via `zkm.amendments`
 - Normalises notmuch IDs (no angle brackets) to the zkm-eml form (`<id>`) before matching
 - Skips system tags by default (`inbox`, `unread`, `attachment`, `signed`, `encrypted`, `replied`, `passed`, `flagged`, `deleted`, `sent`)
