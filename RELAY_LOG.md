@@ -148,3 +148,7 @@ review: verified ledger-only conformance commit clean (gaming-scan/lints clean, 
 ## 2026-07-01 14:51 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
 
 review: doc-only window verified; 31/31 green, ROADMAP 5/5 drained; refreshed contract pointer v4→v6, pruned resolved REVIEW_ME box [id:d0e9,c353,1af4,df4e,f103]
+
+## 2026-07-01 23:25 — reviewer (claude-fable-5, relay-loop)
+
+Fable recheck (genuine Fable, not standin): empty window, gaming-scan clean since 0624, 31/31 green, all 5 closures (d0e9/c353/1af4/df4e/f103) independently confirmed; fixed stale ARCHITECTURE/README/CLAUDE still documenting shipped items as open gaps [id:d0e9,c353,1af4,df4e,f103]
