@@ -7,8 +7,8 @@ Design decisions with rationale and rejected alternatives. Companion to
 
 A frontmatter **amender**: it never creates md files and never touches md
 bodies. It reads the authoritative tag state from the notmuch Xapian database
-and merges user-defined tags into the `tags:` list of mail messages that
-zkm-eml already converted. `creates_dirs: []` and `convert()` returns `[]` —
+and syncs user-defined tags into the `tags:` list of mail messages that
+zkm-eml already converted (additions AND attribution-aware removals — see D1). `creates_dirs: []` and `convert()` returns `[]` —
 both are deliberate signals of the amender pattern.
 
 ## Decision log
@@ -23,7 +23,12 @@ and lose attribution. Instead this plugin **emits** amendment records
 
 - resolves each record's `key.message_id` against a one-shot index of all md
   frontmatter,
-- merges fields per core rules (`tags` = set-union, sorted),
+- applies fields per core rules — since the f103 migration (2026-06-24) the
+  plugin emits **declarative full-set asserts** (`emit_set`, mode `"set"`):
+  core diffs notmuch's previously stored set against the newly asserted one
+  and retracts values whose ref-count drops to zero, so a tag deleted in
+  notmuch disappears from frontmatter IFF notmuch was its sole producer —
+  user/eml-authored tags are never retracted,
 - appends the applied record to the per-md attribution sidecar
   (`<md>.amendments.json`),
 - leaves unresolvable records queued ("run again after zkm-eml to resolve").
@@ -33,10 +38,10 @@ prototype approach) — no attribution, no ordering guarantee, no pending queue
 for mail that hasn't been converted yet. zkm-notmuch was the first amender and
 effectively co-designed this contract.
 
-Idempotence falls out of the engine: `emit` hashes (key, fields, emitted_by)
-to a stable filename, and `apply_queue` skips records whose hash is already in
-the sidecar. Re-running `zkm convert notmuch` with an unchanged database
-produces no diff.
+Idempotence falls out of the engine: `emit_set` hashes (key, fields,
+emitted_by, mode) to a stable filename, and `apply_queue` skips records whose hash
+is already in the sidecar. Re-running `zkm convert notmuch` with an unchanged
+database produces no diff.
 
 ### D2 — Read tags via `notmuch dump --format=batch-tag` subprocess
 
@@ -85,9 +90,9 @@ the set of system tags is small and closed; the set of user tags is open.
 Messages whose tags are ALL excluded get no amendment record at all (no empty
 emits).
 
-Known sharp edge (roadmap df4e): an explicitly empty `tags_exclude: []`
-currently falls back to the built-in defaults, so a user cannot opt into
-"exclude nothing".
+Former sharp edge, fixed (df4e, 2026-06-13): an explicitly empty
+`tags_exclude: []` now means "exclude nothing"; the built-in defaults apply
+only when the key is absent (or an empty string).
 
 ### D5 — Shim + package split (SB5 repackage)
 
@@ -115,25 +120,18 @@ test suite broke exactly this way after the repackage; repaired in the
   Explicit `zkm convert notmuch` passes `created=None` → full sweep. Plugins
   without the parameter keep working (probe, not protocol bump).
 
-Current gaps (both on the roadmap):
-
-- `plugin.yaml` lacks `kind: amender` → core classifies this plugin as a
-  converter and **never auto-runs it** after eml converts (d0e9).
-- `convert()` declares `progress` but not `created` → no scoping; every
-  invocation emits for the entire notmuch database (c353). Full-dump reading
-  is inherent to D2 either way; scoping limits *emits* (and avoids queueing
-  unresolvable records for mail outside the just-converted batch).
+Both former gaps closed 2026-06-13: `plugin.yaml` declares `kind: amender`
+(d0e9), so core auto-runs this plugin after eml converts; and `convert()`
+declares `created` (c353), so those auto-runs are scoped to the just-converted
+batch (full-dump *reading* stays inherent to D2 — scoping filters the emit
+loop and avoids queueing unresolvable records for mail outside the batch).
 
 ## Known limitations (deliberate, for now)
 
-- **Tag removal does not propagate** (roadmap f103, HARD): the amendment engine
-  only merges (set-union for `tags`); a tag deleted in notmuch stays in
-  frontmatter forever. A removal design needs attribution-aware reconciliation
-  (only retract tags this plugin contributed, using the sidecar's
-  `emitted_by: notmuch` records) and probably a core-level removal semantic —
-  cross-repo, judgment-heavy.
 - **No notmuch-side writeback**: tags added in zkm frontmatter are never pushed
   into notmuch. One-way by design; notmuch is the tag source of truth for mail.
-- **subprocess failures surface raw** (roadmap 1af4): a missing notmuch binary
-  raises bare `FileNotFoundError`; a failed dump raises `CalledProcessError`
-  with no hint. Both should become actionable error messages.
+
+Former limitations, since shipped: tag removals now propagate via `emit_set`'s
+attribution-aware retraction (f103, 2026-06-24; see D1) and notmuch CLI
+failures raise actionable `RuntimeError`s — naming the missing binary, or
+including the captured stderr on a non-zero exit (1af4, 2026-06-13).
