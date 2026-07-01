@@ -144,3 +144,7 @@ reconcile-integrate f103 impl (emit→emit_set) from parked orphan d6e2f3d; red 
 ## 2026-06-26 09:41 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
 
 review: verified ledger-only conformance commit clean (gaming-scan/lints clean, 31/31 green); ROADMAP drained 5/5, synced stale TODO summary id:7bdd, surfaced inbox routed:8b00 dead-letter
+
+## 2026-07-01 14:51 — reviewer (claude-opus-4-8, fable-standin, relay-loop)
+
+review: doc-only window verified; 31/31 green, ROADMAP 5/5 drained; refreshed contract pointer v4→v6, pruned resolved REVIEW_ME box [id:d0e9,c353,1af4,df4e,f103]
